@@ -1,0 +1,78 @@
+[
+  {
+    "version": "v1.0-base",
+    "trained_at": "2026-03-02T17:40:32.907052Z",
+    "accuracy": 0.9667,
+    "n_training_samples": 120,
+    "algorithm": "LogisticRegression",
+    "source": "bootstrap (iris dataset completo)",
+    "status": "activado",
+    "activated": true
+  },
+  {
+    "version": "v2.0-962156",
+    "trained_at": "2026-03-02T17:40:33.485473Z",
+    "accuracy": 1.0,
+    "n_training_samples": 20,
+    "algorithm": "LogisticRegression",
+    "source": "desde cero (20 muestras)",
+    "eval_note": "validaci\u00f3n con 4 muestras",
+    "status": "activado",
+    "activated": true
+  },
+  {
+    "version": "v3.0-6adb69",
+    "trained_at": "2026-03-02T17:40:33.512805Z",
+    "accuracy": 0.6,
+    "n_training_samples": 10,
+    "algorithm": "LogisticRegression",
+    "source": "desde cero (10 muestras)",
+    "eval_note": "evaluaci\u00f3n en train (dataset peque\u00f1o, < 20 muestras)",
+    "status": "rechazado",
+    "activated": false
+  },
+  {
+    "version": "v4.0-182aec",
+    "trained_at": "2026-03-02T17:55:04.071323Z",
+    "accuracy": 1.0,
+    "n_training_samples": 30,
+    "algorithm": "LogisticRegression",
+    "source": "incremental (+10 muestras nuevas, 20 anteriores)",
+    "eval_note": "validaci\u00f3n con 6 muestras",
+    "status": "activado",
+    "activated": true
+  },
+  {
+    "version": "v5.0-d81f3e",
+    "trained_at": "2026-03-02T17:56:11.569927Z",
+    "accuracy": 1.0,
+    "n_training_samples": 10,
+    "algorithm": "LogisticRegression",
+    "source": "desde cero (10 muestras)",
+    "eval_note": "evaluaci\u00f3n en train (dataset peque\u00f1o, < 20 muestras)",
+    "status": "activado",
+    "activated": true
+  },
+  {
+    "version": "v6.0-8c3d6c",
+    "trained_at": "2026-03-02T17:56:19.358954Z",
+    "accuracy": 1.0,
+    "n_training_samples": 20,
+    "algorithm": "LogisticRegression",
+    "source": "incremental (+10 muestras nuevas, 10 anteriores)",
+    "eval_note": "validaci\u00f3n con 4 muestras",
+    "status": "activado",
+    "activated": true
+  },
+  {
+    "version": "v7.0-8b41a6",
+    "trained_at": "2026-03-02T18:17:25.536136Z",
+    "accuracy": 0.8333,
+    "n_training_samples": 30,
+    "algorithm": "LogisticRegression",
+    "source": "incremental (+10 muestras nuevas, 20 anteriores)",
+    "eval_note": "validaci\u00f3n con 6 muestras",
+    "status": "rechazado",
+    "activated": false
+  }
+]

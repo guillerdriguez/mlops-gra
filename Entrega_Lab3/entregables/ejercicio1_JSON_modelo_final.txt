@@ -1,0 +1,10 @@
+{
+  "active_version": "string",
+  "trained_at": "string",
+  "accuracy": 0,
+  "n_training_samples": 0,
+  "algorithm": "string",
+  "history": [
+    {}
+  ]
+}

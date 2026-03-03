@@ -1,0 +1,57 @@
+Razonamiento previo (antes del código)
+
+Escenario 1 (fraude bancario, falsos negativos muy caros)
+Yo priorizaría una política basada en una métrica por clase, no en accuracy global. La accuracy puede
+ “verse bien” aunque el modelo falle justo en los fraudes (que suelen ser minoría). 
+ Por eso usaría per_class_f1 centrada en la clase “fraude” (o incluso recall/recall ponderado si lo 
+ tuvieras). La idea es: solo activo el modelo si mejora la detección del fraude aunque el global no suba.
+
+Escenario 2 (recomendación de películas, coste bajo por error)
+Aquí el coste de equivocarse es bajo y el sistema se beneficia de iterar rápido. Aplicaría 
+any_improvement (>=) porque cualquier mejora marginal (o empate) puede ser aceptable; además, 
+con datasets grandes la métrica puede estabilizarse y exigir mejoras estrictas podría frenar 
+actualizaciones útiles.
+
+Escenario 3 (modelo médico, estabilidad y previsibilidad importan)
+Aquí me interesa evitar cambios frecuentes que no aporten un beneficio claro. Usaría min_delta con un 
+umbral (por ejemplo 0.02 = 2 puntos porcentuales de mejora) para reducir “flapping” (activar modelos 
+distintos todo el rato por variaciones pequeñas). Si el dominio lo requiere, incluso pediría además 
+validación con más datos, pero dentro de este ejercicio, min_delta encaja.
+
+Pseudocódigo de ActivationPolicy
+
+La idea es encapsular la decisión en una clase (o varias políticas) para no tener la lógica “pegada” en el endpoint.
+"""
+class ActivationPolicy:
+    name: str
+
+    def should_activate(metrics_new, metrics_prev, params) -> (bool, reason_str):
+        # devuelve si activar y una explicación corta (para guardar en el historial)
+
+policy = request.policy (default="any_improvement")
+
+if policy == "any_improvement":
+    activate = (prev is None) OR (acc_new >= acc_prev)
+    reason = "acc_new >= acc_prev" ...
+
+if policy == "min_delta":
+    delta = params.min_delta (default 0.02)
+    activate = (prev is None) OR (acc_new >= acc_prev + delta)
+    reason = "acc_new >= acc_prev + delta" ...
+
+if policy == "per_class_f1":
+    target_class = params.target_class (required)
+    activate = (prev is None) OR (f1_new[target_class] > f1_prev[target_class])
+    reason = "f1_class_k improved" ...
+"""
+
+Parámetros necesarios:
+- any_improvement: no necesita parámetros.
+- min_delta: min_delta (float, por ejemplo 0.02).
+- per_class_f1: target_class (int 0/1/2), opcionalmente min_delta_f1 si quieres exigir una mejora mínima.
+
+Y en el historial guardarías:
+- policy: nombre de la política usada
+- policy_params: parámetros usados (si aplica)
+- decision_reason: texto corto con el motivo
+

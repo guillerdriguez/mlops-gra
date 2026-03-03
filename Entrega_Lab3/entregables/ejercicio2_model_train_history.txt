@@ -1,0 +1,53 @@
+Lo obtenido tras ejecutar la demo es:
+
+[
+  {
+    "version": "v1.0-base",
+    "trained_at": "2026-03-02T17:40:32.907052Z",
+    "accuracy": 0.9667,
+    "n_training_samples": 120,
+    "algorithm": "LogisticRegression",
+    "source": "bootstrap (iris dataset completo)",
+    "status": "activado",
+    "activated": true
+  },
+  {
+    "version": "v2.0-962156",
+    "trained_at": "2026-03-02T17:40:33.485473Z",
+    "accuracy": 1.0,
+    "n_training_samples": 20,
+    "algorithm": "LogisticRegression",
+    "source": "desde cero (20 muestras)",
+    "eval_note": "validaci\u00f3n con 4 muestras",
+    "status": "activado",
+    "activated": true
+  },
+  {
+    "version": "v3.0-6adb69",
+    "trained_at": "2026-03-02T17:40:33.512805Z",
+    "accuracy": 0.6,
+    "n_training_samples": 10,
+    "algorithm": "LogisticRegression",
+    "source": "desde cero (10 muestras)",
+    "eval_note": "evaluaci\u00f3n en train (dataset peque\u00f1o, < 20 muestras)",
+    "status": "rechazado",
+    "activated": false
+  }
+]
+
+Se han registrado tres versiones del modelo: v1.0-base, v2.0-962156 y v3.0-6adb69.
+
+Las versiones activadas son dos:
+– v1.0-base, con una accuracy de 0,9667 entrenada con 120 muestras.
+– v2.0-962156, con una accuracy de 1,0 entrenada con 20 muestras y validación con 4 muestras.
+
+La versión rechazada es:
+– v3.0-6adb69, con una accuracy de 0,6 entrenada con solo 10 muestras y evaluada sobre 
+el propio conjunto de entrenamiento.
+
+El modelo entrenado con muestras ruidosas fue rechazado por una combinación de factores críticos 
+desde el punto de vista de calidad de modelo: tamaño de muestra insuficiente (10 observaciones), 
+evaluación realizada únicamente sobre el conjunto de entrenamiento (sin validación independiente) y 
+un rendimiento claramente inferior (60% de accuracy). Esto sugiere baja capacidad de generalización y 
+alta probabilidad de sobreajuste o inestabilidad estadística. En un entorno mínimamente controlado de 
+MLOps, ese nivel de evidencia no es aceptable para activación en producción.

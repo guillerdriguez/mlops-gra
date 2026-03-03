@@ -1,0 +1,82 @@
+[
+  {
+    "version": "v1.0-base",
+    "trained_at": "2026-03-03T09:45:23.963568Z",
+    "accuracy": 0.9667,
+    "n_training_samples": 120,
+    "algorithm": "LogisticRegression",
+    "source": "bootstrap (iris dataset completo)",
+    "status": "activado",
+    "activated": true,
+    "policy": "bootstrap",
+    "policy_params": {},
+    "decision_reason": "bootstrap inicial",
+    "f1_per_class": null
+  },
+  {
+    "version": "v2.0-97e9ed",
+    "trained_at": "2026-03-03T09:45:24.528559Z",
+    "accuracy": 1.0,
+    "n_training_samples": 20,
+    "algorithm": "LogisticRegression",
+    "source": "desde cero (20 muestras)",
+    "eval_note": "validaci\u00f3n con 4 muestras",
+    "status": "activado",
+    "activated": true,
+    "policy": "any_improvement",
+    "policy_params": {
+      "min_delta": null,
+      "target_class": null
+    },
+    "decision_reason": "any_improvement: 1.0000 >= 0.9667",
+    "f1_per_class": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "version": "v3.0-ac1706",
+    "trained_at": "2026-03-03T09:45:24.560566Z",
+    "accuracy": 0.6,
+    "n_training_samples": 10,
+    "algorithm": "LogisticRegression",
+    "source": "desde cero (10 muestras)",
+    "eval_note": "evaluaci\u00f3n en train (dataset peque\u00f1o, < 20 muestras)",
+    "status": "rechazado",
+    "activated": false,
+    "policy": "any_improvement",
+    "policy_params": {
+      "min_delta": null,
+      "target_class": null
+    },
+    "decision_reason": "any_improvement: 0.6000 >= 1.0000",
+    "f1_per_class": [
+      0.5714,
+      0.5,
+      0.6667
+    ]
+  },
+  {
+    "version": "v4.0-32fd27",
+    "trained_at": "2026-03-03T09:48:27.912581Z",
+    "accuracy": 0.5,
+    "n_training_samples": 30,
+    "algorithm": "LogisticRegression",
+    "source": "incremental (+10 muestras nuevas, 20 anteriores)",
+    "eval_note": "validaci\u00f3n con 6 muestras",
+    "status": "rechazado",
+    "activated": false,
+    "policy": "any_improvement",
+    "policy_params": {
+      "min_delta": null,
+      "target_class": null
+    },
+    "decision_reason": "any_improvement: 0.5000 >= 1.0000",
+    "f1_per_class": [
+      0.5714,
+      0.0,
+      0.5
+    ]
+  }
+]

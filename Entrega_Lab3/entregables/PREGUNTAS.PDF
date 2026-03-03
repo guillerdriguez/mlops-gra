@@ -1,0 +1,56 @@
+Pregunta 1. 
+Sí, se obtendría exactamente el mismo modelo y la misma accuracy, siempre que el entorno sea el mismo.
+
+El proceso de bootstrap es reproducible porque en el código se fija explícitamente la semilla aleatoria (random_state=42) tanto en la 
+partición de los datos como en el entrenamiento del modelo:
+- train_test_split(..., random_state=42)
+- LogisticRegression(..., random_state=42)
+
+Esto hace que la división train/test y la inicialización interna del modelo sean siempre iguales en cada ejecución. Por tanto, si se borra 
+la carpeta models/ y se vuelve a arrancar el servidor, se recrea exactamente el mismo modelo base con la misma accuracy.
+
+Si no se fijara random_state, cada arranque podría generar una partición distinta de los datos y la accuracy podría variar ligeramente.
+
+Pregunta 2. 
+Si se enviaran 10 muestras perfectamente etiquetadas pero todas de la clase setosa, el modelo no se entrenaría.
+
+En el endpoint /train, el código comprueba que el conjunto de entrenamiento tenga al menos dos clases distintas mediante:
+if len(np.unique(y_train)) < 2:
+Si solo hay una clase, la API devuelve un error HTTP 422 (Unprocessable Entity). Esto significa que la petición está bien formada, pero su 
+contenido no es válido para entrenar el modelo.
+
+Tiene sentido esta restricción porque un modelo de clasificación necesita al menos dos clases para poder aprender una frontera de decisión. Si 
+olo existe una clase, el problema deja de estar bien definido y algoritmos como LogisticRegression no pueden entrenarse correctamente.
+Además, en este caso:
+- No se entrena ningún modelo.
+- No se genera nueva versión.
+- El modelo activo permanece igual.
+
+Pregunta 3:
+El modelo entrenado con muestras ruidosas aparece en el historial aunque no haya sido activado porque el sistema está diseñado para 
+registrar todos los intentos de entrenamiento, no solo los exitosos.
+
+Esto es importante desde el punto de vista de MLOps porque permite:
+- Tener trazabilidad completa de lo que ha ocurrido.
+- Saber qué datos provocaron una degradación del rendimiento.
+- Analizar intentos fallidos en el futuro.
+- Auditar el comportamiento del sistema.
+
+Si solo se guardaran los modelos activados, se perdería información relevante sobre entrenamientos rechazados y no sería posible entender 
+por qué en algún momento el modelo no se actualizó. Registrar también los rechazados aporta transparencia y control sobre el proceso.
+
+Pregunta 4:
+El gate de calidad usa la condición: accuracy_new >= accuracy_previous
+
+Esto significa que si el nuevo modelo obtiene exactamente la misma accuracy que el anterior, también se activa.
+
+En mi opinión, usar >= es razonable en este contexto. En la práctica, cuando el dataset va creciendo con muestras de buena calidad, 
+puede llegar un momento en que la accuracy se estabilice cerca de su valor máximo. Aunque se añadan datos nuevos, la métrica puede no subir más.
+
+Eso no significa que el modelo no haya mejorado. Puede ser más robusto, estar mejor ajustado o representar mejor los datos actuales, aunque la accuracy global sea la misma.
+
+Si se utilizara un > estricto, el sistema podría quedarse “bloqueado” cuando la accuracy alcanzara un techo, impidiendo l
+a actualización del modelo aunque se estuvieran incorporando datos útiles.
+
+Por eso, permitir la activación cuando la accuracy es igual evita degradaciones y al mismo tiempo 
+permite que el modelo evolucione con nuevos datos.

@@ -1,0 +1,59 @@
+El conjunto de muestras usado será el siguiente:
+
+{
+  "samples": [
+    {"sepal_length": 5.1, "sepal_width": 3.5, "petal_length": 1.4, "petal_width": 0.2, "label": 0},
+    {"sepal_length": 4.9, "sepal_width": 3.0, "petal_length": 1.4, "petal_width": 0.2, "label": 0},
+    {"sepal_length": 5.0, "sepal_width": 3.6, "petal_length": 1.4, "petal_width": 0.3, "label": 0},
+    {"sepal_length": 5.4, "sepal_width": 3.9, "petal_length": 1.7, "petal_width": 0.4, "label": 0},
+    {"sepal_length": 4.6, "sepal_width": 3.4, "petal_length": 1.4, "petal_width": 0.3, "label": 0},
+
+    {"sepal_length": 7.0, "sepal_width": 3.2, "petal_length": 4.7, "petal_width": 1.4, "label": 1},
+    {"sepal_length": 6.4, "sepal_width": 3.2, "petal_length": 4.5, "petal_width": 1.5, "label": 1},
+    {"sepal_length": 6.9, "sepal_width": 3.1, "petal_length": 4.9, "petal_width": 1.5, "label": 1},
+    {"sepal_length": 5.5, "sepal_width": 2.3, "petal_length": 4.0, "petal_width": 1.3, "label": 1},
+    {"sepal_length": 6.5, "sepal_width": 2.8, "petal_length": 4.6, "petal_width": 1.5, "label": 1}
+  ],
+  "retrain_from_scratch": 
+}
+
+Modificando "retrain_from_scratch" de false a true respectivamente, se obtienen los siguientes modelos:
+
+  {
+    "version": "v4.0-182aec",
+    "trained_at": "2026-03-02T17:55:04.071323Z",
+    "accuracy": 1.0,
+    "n_training_samples": 30,
+    "algorithm": "LogisticRegression",
+    "source": "incremental (+10 muestras nuevas, 20 anteriores)",
+    "eval_note": "validaci\u00f3n con 6 muestras",
+    "status": "activado",
+    "activated": true
+  },
+  {
+    "version": "v5.0-d81f3e",
+    "trained_at": "2026-03-02T17:56:11.569927Z",
+    "accuracy": 1.0,
+    "n_training_samples": 10,
+    "algorithm": "LogisticRegression",
+    "source": "desde cero (10 muestras)",
+    "eval_note": "evaluaci\u00f3n en train (dataset peque\u00f1o, < 20 muestras)",
+    "status": "activado",
+    "activated": true
+  },
+
+
+Al entrenar el modelo dos veces con el mismo conjunto de 10 muestras se obtuvieron dos versiones: una 
+incremental (v4.0-182aec) y otra desde cero (v5.0-d81f3e). En ambos casos el accuracy fue 1.0, 
+pero el contexto de ese resultado es diferente.
+
+El modelo incremental se entrenó acumulando datos anteriores (30 muestras en total) y se evaluó 
+con un pequeño conjunto de validación independiente. Por tanto, su resultado tiene mayor fiabilidad.
+
+En cambio, el modelo entrenado desde cero utilizó únicamente las 10 muestras y 
+se evaluó sobre el propio conjunto de entrenamiento. En estas condiciones es relativamente fácil 
+obtener un 1.0, pero ese valor no garantiza que el modelo generalice bien a datos nuevos.
+
+En conclusión, aunque ambos modelos muestran la misma precisión, el modelo incremental es 
+más sólido desde el punto de vista metodológico, mientras que el modelo entrenado desde cero presenta 
+un resultado menos representativo.

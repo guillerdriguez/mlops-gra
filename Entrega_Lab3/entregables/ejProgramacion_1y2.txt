@@ -1,0 +1,189 @@
+Vemos que todo esta limpio y vuelve a su estado inicial:
+
+{
+  "active_version": "string",
+  "trained_at": "string",
+  "accuracy": 0,
+  "n_training_samples": 0,
+  "algorithm": "string",
+  "history": [
+    {}
+  ]
+}
+
+Y ejecutamos ahora la demo con el nuevo main obteniendo:
+
+(venv) Guille@MacBook-Air-de-Guille Entrega_Lab3 % python demo_ct.py --reset
+
+════════════════════════════════════════════════════════════
+  🌸  DEMO: Iris Continuous Training API
+════════════════════════════════════════════════════════════
+  Host: http://localhost:8000
+
+────────────────────────────────────────────────────────────
+  RESET – Restaurando modelo base
+────────────────────────────────────────────────────────────
+  ✅  Historial eliminado. Modelo base restaurado.
+
+────────────────────────────────────────────────────────────
+  PASO 0 – Health check
+────────────────────────────────────────────────────────────
+  ✅  Servicio activo. Modelo activo: v1.0-base
+
+────────────────────────────────────────────────────────────
+  PASO 0b – Info modelo base
+────────────────────────────────────────────────────────────
+  ✅  Versión activa : v1.0-base
+  ✅  Entrenado el   : 2026-03-03T09:45:23.963568Z
+  ✅  Accuracy       : 0.9667
+  ✅  Nº muestras    : 120
+  ✅  Algoritmo      : LogisticRegression
+
+  ℹ️   Historial de versiones (1 entradas):
+    🟢 v1.0-base  |  acc=0.9667  |  2026-03-03T09:45:23  |  activado
+
+────────────────────────────────────────────────────────────
+  PASO 1 – Predicción con el modelo base
+────────────────────────────────────────────────────────────
+  ✅  Predicción: clase 0 (setosa), versión modelo: v1.0-base
+
+────────────────────────────────────────────────────────────
+  PASO 2 – Reentrenamiento con muestras CORRECTAS
+────────────────────────────────────────────────────────────
+  ℹ️   Enviando 20 muestras bien etiquetadas...
+  ✅  Nuevo modelo ACTIVADO → versión: v2.0-97e9ed
+  ✅  Accuracy nuevo: 1.0000  |  Anterior: 0.9667
+  ℹ️   Nuevo modelo activado. Accuracy 1.0000 >= anterior (0.9667) | any_improvement: 1.0000 >= 0.9667
+
+────────────────────────────────────────────────────────────
+  PASO 3 – Reentrenamiento con muestras RUIDOSAS (etiquetas incorrectas)
+────────────────────────────────────────────────────────────
+  ℹ️   Enviando 10 muestras con etiquetas erróneas...
+  ✅  Modelo RECHAZADO como esperado. Accuracy 0.6000 < anterior 1.0000
+  ℹ️   Modelo NO activado. Accuracy 0.6000 < anterior (1.0000). El modelo activo se mantiene sin cambios. | any_improvement: 0.6000 >= 1.0000
+
+────────────────────────────────────────────────────────────
+  PASO 4 – Predicción con el modelo actualizado
+────────────────────────────────────────────────────────────
+  ✅  Predicción: clase 0 (setosa), versión modelo: v2.0-97e9ed
+
+────────────────────────────────────────────────────────────
+  RESUMEN FINAL – Historial de versiones
+────────────────────────────────────────────────────────────
+  ✅  Versión activa : v2.0-97e9ed
+  ✅  Entrenado el   : 2026-03-03T09:45:24.528559Z
+  ✅  Accuracy       : 1.0000
+  ✅  Nº muestras    : 20
+  ✅  Algoritmo      : LogisticRegression
+
+  ℹ️   Historial de versiones (3 entradas):
+    🟢 v1.0-base  |  acc=0.9667  |  2026-03-03T09:45:23  |  activado
+    🟢 v2.0-97e9ed  |  acc=1.0000  |  2026-03-03T09:45:24  |  activado
+    🔴 v3.0-ac1706  |  acc=0.6000  |  2026-03-03T09:45:24  |  rechazado
+
+────────────────────────────────────────────────────────────
+  ✅  Demo completado. Abre http://localhost:8000/docs para explorar la API.
+
+  
+
+  Asi obtenemos los dos modelos activados y uno rechazado de la demo. Buscamos obtener un modelo
+  rechazado más, y lo hacemos con estos samples en nuestra API:
+
+  "samples": [
+      {"sepal_length":5.1,"sepal_width":3.5,"petal_length":1.4,"petal_width":0.2,"label":2},
+      {"sepal_length":4.9,"sepal_width":3.0,"petal_length":1.4,"petal_width":0.2,"label":2},
+      {"sepal_length":4.7,"sepal_width":3.2,"petal_length":1.3,"petal_width":0.2,"label":1},
+      {"sepal_length":4.6,"sepal_width":3.1,"petal_length":1.5,"petal_width":0.2,"label":1},
+      {"sepal_length":6.4,"sepal_width":3.2,"petal_length":4.5,"petal_width":1.5,"label":0},
+      {"sepal_length":6.9,"sepal_width":3.1,"petal_length":4.9,"petal_width":1.5,"label":0},
+      {"sepal_length":7.1,"sepal_width":3.0,"petal_length":5.9,"petal_width":2.1,"label":0},
+      {"sepal_length":6.5,"sepal_width":3.0,"petal_length":5.8,"petal_width":2.2,"label":0},
+      {"sepal_length":5.8,"sepal_width":2.7,"petal_length":5.1,"petal_width":1.9,"label":0},
+      {"sepal_length":6.3,"sepal_width":3.3,"petal_length":6.0,"petal_width":2.5,"label":0}
+    ]
+
+
+Como era de esperar, debido al dataset ruidoso impuesto, se obtiene un modelo rechazado (la version 4):
+
+[
+  {
+    "version": "v1.0-base",
+    "trained_at": "2026-03-03T09:45:23.963568Z",
+    "accuracy": 0.9667,
+    "n_training_samples": 120,
+    "algorithm": "LogisticRegression",
+    "source": "bootstrap (iris dataset completo)",
+    "status": "activado",
+    "activated": true,
+    "policy": "bootstrap",
+    "policy_params": {},
+    "decision_reason": "bootstrap inicial",
+    "f1_per_class": null
+  },
+  {
+    "version": "v2.0-97e9ed",
+    "trained_at": "2026-03-03T09:45:24.528559Z",
+    "accuracy": 1.0,
+    "n_training_samples": 20,
+    "algorithm": "LogisticRegression",
+    "source": "desde cero (20 muestras)",
+    "eval_note": "validaci\u00f3n con 4 muestras",
+    "status": "activado",
+    "activated": true,
+    "policy": "any_improvement",
+    "policy_params": {
+      "min_delta": null,
+      "target_class": null
+    },
+    "decision_reason": "any_improvement: 1.0000 >= 0.9667",
+    "f1_per_class": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "version": "v3.0-ac1706",
+    "trained_at": "2026-03-03T09:45:24.560566Z",
+    "accuracy": 0.6,
+    "n_training_samples": 10,
+    "algorithm": "LogisticRegression",
+    "source": "desde cero (10 muestras)",
+    "eval_note": "evaluaci\u00f3n en train (dataset peque\u00f1o, < 20 muestras)",
+    "status": "rechazado",
+    "activated": false,
+    "policy": "any_improvement",
+    "policy_params": {
+      "min_delta": null,
+      "target_class": null
+    },
+    "decision_reason": "any_improvement: 0.6000 >= 1.0000",
+    "f1_per_class": [
+      0.5714,
+      0.5,
+      0.6667
+    ]
+  },
+  {
+    "version": "v4.0-32fd27",
+    "trained_at": "2026-03-03T09:48:27.912581Z",
+    "accuracy": 0.5,
+    "n_training_samples": 30,
+    "algorithm": "LogisticRegression",
+    "source": "incremental (+10 muestras nuevas, 20 anteriores)",
+    "eval_note": "validaci\u00f3n con 6 muestras",
+    "status": "rechazado",
+    "activated": false,
+    "policy": "any_improvement",
+    "policy_params": {
+      "min_delta": null,
+      "target_class": null
+    },
+    "decision_reason": "any_improvement: 0.5000 >= 1.0000",
+    "f1_per_class": [
+      0.5714,
+      0.0,
+      0.5
+    ]
+  }
+]

@@ -1,0 +1,18 @@
+(venv) Guille@MacBook-Air-de-Guille Entrega_Lab3 % uvicorn main:app --reload
+INFO:     Will watch for changes in these directories: ['/Users/Guille/Documents/MUIA/MLOps/mlops-gra/Entrega_Lab3']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [13128] using WatchFiles
+/Users/Guille/.pyenv/versions/3.9.18/lib/python3.9/site-packages/pydantic/_internal/_fields.py:160: UserWarning: Field "model_version" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+  warnings.warn(
+/Users/Guille/.pyenv/versions/3.9.18/lib/python3.9/site-packages/pydantic/_internal/_fields.py:160: UserWarning: Field "model_updated" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+  warnings.warn(
+INFO:     Started server process [13159]
+INFO:     Waiting for application startup.
+[startup] Modelo activo cargado → versión=v1.0-base, accuracy=0.9667
+INFO:     Application startup complete.
+INFO:     127.0.0.1:53121 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53121 - "GET /openapi.json HTTP/1.1" 200 OK
