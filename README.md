@@ -101,3 +101,29 @@ Dado que se trata de un problema médico, se priorizó el **recall de la clase p
 Los modelos finalistas se registraron en **MLflow Model Registry**, permitiendo gestionar distintas versiones del modelo y facilitar su despliegue posterior.
 
 Los resultados de validación se encuentran en:
+
+---
+
+# Entrega 6
+
+En la carpeta `Entrega_Lab6/` se encuentra todo el material del LAB 6 — Despliegue con Docker: MLOps-Capstone-Project.
+
+## Descripción
+
+En esta práctica se containeriza la aplicación completa del proyecto MLOps: el backend FastAPI que sirve predicciones del modelo Iris y el frontend Gradio que ofrece interfaz al usuario. Ambos servicios se orquestan con Docker Compose y arrancan con un único comando.
+
+## Contenido de la entrega
+
+- `Entrega_Lab6/MLOps-Capstone-Project/backend-iris/Dockerfile` — Dockerfile del backend con `HEALTHCHECK` incluido.
+- `Entrega_Lab6/MLOps-Capstone-Project/frontend-iris/Dockerfile` — Dockerfile del frontend Gradio.
+- `Entrega_Lab6/MLOps-Capstone-Project/docker-compose.yml` — Orquestación con `condition: service_healthy` para arranque ordenado.
+- `Entrega_Lab6/MLOps-Capstone-Project/verify_stack.sh` — Script de verificación end-to-end del stack.
+- `Entrega_Lab6/README.md` — README específico de la rama LAB6 con explicación detallada, respuestas a las preguntas teóricas y razonamiento del ejercicio de programación.
+
+## Aspectos clave implementados
+
+- **Dockerfiles optimizados** con orden de capas correcto para aprovechar la caché de construcción.
+- **Health check robusto** en el backend: el endpoint `/health` devuelve HTTP 200 solo cuando el modelo está cargado en memoria y HTTP 503 mientras se descarga de Hugging Face Hub.
+- **Arranque ordenado** con `condition: service_healthy` en `depends_on`: el frontend solo arranca cuando el backend supera el health check.
+- **Red interna Docker Compose**: el frontend accede al backend usando el nombre de servicio `backend` en lugar de `localhost`.
+- **Gestión de secretos** con fichero `.env` (excluido del repositorio con `.gitignore`).
